@@ -1,12 +1,20 @@
 import Navigation from "@/components/site/navigation";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { ReactNode } from "react";
 
 const layout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="h-full w-full">
-      <Navigation />
-      {children}
-    </main>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      <main className="h-full w-full">
+        <Navigation />
+        {children}
+      </main>
+    </ClerkProvider>
   );
 };
 
