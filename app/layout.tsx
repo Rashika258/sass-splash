@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
+    // <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -29,6 +29,6 @@ export default function RootLayout({
           <body className={inter.className}>{children}</body>
         </ThemeProvider>
       </html>
-    </ClerkProvider>
+    // </ClerkProvider>
   );
 }
