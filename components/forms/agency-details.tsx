@@ -5,6 +5,7 @@ import * as React from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { AlertDialog } from "../ui/alert-dialog";
+import { NumberInput } from "@tremor/react";
 import {
   Card,
   CardContent,
@@ -27,6 +28,11 @@ import {
 import { FileUpload } from "../global/file-upload";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
+import {
+  saveActivityLogsNotification,
+  updateAgencyDetails,
+} from "@/lib/queries";
+import { Button } from "../ui/button";
 
 export interface IAgencyDetailsFormProps {
   data?: Partial<Agency>;
@@ -120,18 +126,13 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem>
                       <FormLabel> Agency Name</FormLabel>
                       <FormControl>
-                        <Input
-                        placeholder="Yur Agency Name"
-                        {...field}
-                        >
-                        </Input>
+                        <Input placeholder="Yur Agency Name" {...field}></Input>
                       </FormControl>
                     </FormItem>
                   )}
                 />
               </div>
 
-          
               <div className="flex md:flex-row gap-4">
                 <FormField
                   disabled={isLoading}
@@ -141,10 +142,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>Agency Name</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Your agency name"
-                          {...field}
-                        />
+                        <Input placeholder="Your agency name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -157,11 +155,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>Agency Email</FormLabel>
                       <FormControl>
-                        <Input
-                          readOnly
-                          placeholder="Email"
-                          {...field}
-                        />
+                        <Input readOnly placeholder="Email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -177,10 +171,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>Agency Phone Number</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Phone"
-                          {...field}
-                        />
+                        <Input placeholder="Phone" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -211,7 +202,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                         />
                       </FormControl>
                     </FormItem>
-                  )
+                  );
                 }}
               />
               <FormField
@@ -222,10 +213,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                   <FormItem className="flex-1">
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="123 st..."
-                        {...field}
-                      />
+                      <Input placeholder="123 st..." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -240,10 +228,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>City</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="City"
-                          {...field}
-                        />
+                        <Input placeholder="City" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -257,10 +242,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>State</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="State"
-                          {...field}
-                        />
+                        <Input placeholder="State" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -274,10 +256,7 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                     <FormItem className="flex-1">
                       <FormLabel>Zipcpde</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Zipcode"
-                          {...field}
-                        />
+                        <Input placeholder="Zipcode" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -292,15 +271,43 @@ export default function AgencyDetails({ data }: IAgencyDetailsFormProps) {
                   <FormItem className="flex-1">
                     <FormLabel>Country</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Country"
-                        {...field}
-                      />
+                      <Input placeholder="Country" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {data?.id && (
+                <div className="flex flex-col gap-2">
+                  <FormLabel>Create A Goal</FormLabel>
+                  <FormDescription>
+                    ✨ Create a goal for your agency. As your business grows
+                    your goals grow too so dont forget to set the bar higher!
+                  </FormDescription>
+                  <NumberInput
+                    min={1}
+                    className="bg-background !border !border-input"
+                    placeholder="Sub Account Goal"
+                    defaultValue={data?.goal}
+                    onValueChange={async (val) => {
+                      if (!data?.id) return;
+                      await updateAgencyDetails(data.id, { goal: val });
+                      await saveActivityLogsNotification({
+                        agencyId: data.id,
+                        description: `Updated  the agency goal to | ${val} Sub Account`,
+                        subAccountId: undefined,
+                      });
+
+                      router.refresh();
+                    }}
+                  ></NumberInput>
+                </div>
+              )}
+
+              <Button type="submit" disabled={isLoading}>
+                Save Agency Information
+                {/* {isLoading ? <Loading /> : 'Save Agency Information'} */}
+              </Button>
             </form>
           </Form>
         </CardContent>
