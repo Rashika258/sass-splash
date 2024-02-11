@@ -3,7 +3,7 @@
 import { clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, User } from "@prisma/client";
+import { Agency, Plan, User } from "@prisma/client";
 
 export const getAuthUserDetails = async () => {
   const user = await currentUser();
@@ -250,4 +250,33 @@ export const initUser = async (newUser: Partial<User>) =>{
     return userData
 }
 
+
+export const upsertAgency = async(agency: Agency, price?: Plan) =>{
+    if(!agency.companyEmail) return null;
+    try {
+        const agencyDetails = await db.agency.upsert({
+            where:{
+                id: agency.id
+            },
+            update: agency,
+            create:{
+                users:{
+                    connect:{
+                        email: agency.companyEmail
+                    }
+                },
+                ...agency,
+                SidebarOption:{
+                    create:[
+                        {
+                            name:"Dashboard"
+                        }
+                    ]
+                }
+            }
+        })
+    } catch (error) {
+        
+    }
+}
 
