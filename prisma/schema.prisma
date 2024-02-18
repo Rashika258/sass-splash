@@ -1,9 +1,14 @@
+// A data source determines how Prisma connects your database, and is represented by the datasource block in the Prisma schema
+
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
+
+// A Prisma schema can have one or more generators, represented by the generator block:
+// A generator determines which assets are created when you run the prisma generate command. The main property provider defines which Prisma Client (language specific) is created - currently, only prisma-client-js is available
 generator client {
   provider = "prisma-client-js"
 }
@@ -396,8 +401,8 @@ model Notification {
 }
 
 enum Plan {
-  price_1OYxkqFj9oKEERu1NbKUxXxN
-  price_1OYxkqFj9oKEERu1KfJGWxgN
+  price_1Ol3ARSAKybWdHx9xbjnzpnA
+  price_1Ol3ARSAKybWdHx9qW9VbqtM
 }
 
 model Subscription {
