@@ -8,6 +8,7 @@ import {
   Prisma,
   Role,
   SubAccount,
+  Tag,
   Ticket,
   User,
 } from "@prisma/client";
@@ -287,6 +288,19 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const upsertTag = async (
+  subaccountId: string,
+  tag: Prisma.TagUncheckedCreateInput
+) => {
+  const response = await db.tag.upsert({
+    where: { id: tag.id || v4(), subAccountId: subaccountId },
+    update: tag,
+    create: { ...tag, subAccountId: subaccountId },
+  });
+
+  return response;
 };
 
 export const upsertSubAccount = async (subAccount: SubAccount) => {
@@ -827,5 +841,87 @@ export const getPipelines = async (subaccountId: string) => {
     },
   });
 
+  return response;
+};
+
+export const deleteFunnelePage = async (funnelPageId: string) => {
+  const response = await db.funnelPage.delete({ where: { id: funnelPageId } });
+
+  return response;
+};
+
+export const getSubAccountTeamMembers = async (subaccountId: string) => {
+  const subaccountUsersWithAccess = await db.user.findMany({
+    where: {
+      Agency: {
+        SubAccount: {
+          some: {
+            id: subaccountId,
+          },
+        },
+      },
+      role: "SUBACCOUNT_USER",
+      Permissions: {
+        some: {
+          subAccountId: subaccountId,
+          access: true,
+        },
+      },
+    },
+  });
+  return subaccountUsersWithAccess;
+};
+
+export const searchContacts = async (searchTerms: string) => {
+  const response = await db.contact.findMany({
+    where: {
+      name: {
+        contains: searchTerms,
+      },
+    },
+  });
+  return response;
+};
+
+export const upsertTicket = async (
+  ticket: Prisma.TicketUncheckedCreateInput,
+  tags: Tag[]
+) => {
+  let order: number;
+  if (!ticket.order) {
+    const tickets = await db.ticket.findMany({
+      where: { laneId: ticket.laneId },
+    });
+    order = tickets.length;
+  } else {
+    order = ticket.order;
+  }
+
+  const response = await db.ticket.upsert({
+    where: {
+      id: ticket.id || v4(),
+    },
+    update: { ...ticket, Tags: { set: tags } },
+    create: { ...ticket, Tags: { connect: tags }, order },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Tags: true,
+      Lane: true,
+    },
+  });
+
+  return response;
+};
+
+export const getTicketsWithTags = async (pipelineId: string) => {
+  const response = await db.ticket.findMany({
+    where: {
+      Lane: {
+        pipelineId,
+      },
+    },
+    include: { Tags: true, Assigned: true, Customer: true },
+  });
   return response;
 };

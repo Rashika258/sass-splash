@@ -1,16 +1,25 @@
-import { Contact, Prisma, Role, Tag, Ticket, User } from "@prisma/client";
+import {
+  Contact,
+  Notification,
+  Prisma,
+  Role,
+  Tag,
+  Ticket,
+  User,
+} from "@prisma/client";
 import Stripe from "stripe";
 import { z } from "zod";
 import { db } from "./db";
 import {
-    _getTicketsWithAllRelations,
-    getAuthUserDetails,
-    getFunnels,
-    getMedia,
-    getUserPermissions,
+  _getTicketsWithAllRelations,
+  getAuthUserDetails,
+  getFunnels,
+  getMedia,
+  getTicketsWithTags,
+  getUserPermissions,
 } from "./queries";
 
-export type NotificationHeader =
+export type NotificationWithUser =
   | ({
       User: {
         id: string;
@@ -65,6 +74,14 @@ const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
   });
 };
 
+export const CreatePipelineFormSchema = z.object({
+  name: z.string().min(1),
+});
+
+export const LaneFormSchema = z.object({
+  name: z.string().min(1),
+});
+
 export type AuthUserWithAgencySidebarOptionsSubAccounts =
   Prisma.PromiseReturnType<typeof getAuthUserDetails>;
 
@@ -95,6 +112,10 @@ export const TicketFormSchema = z.object({
 
 export type TicketDetails = Prisma.PromiseReturnType<
   typeof _getTicketsWithAllRelations
+>;
+
+export type TicketWithTags = Prisma.PromiseReturnType<
+  typeof getTicketsWithTags
 >;
 
 export const ContactUserFormSchema = z.object({
@@ -129,3 +150,6 @@ export type FunnelsForSubAccount = Prisma.PromiseReturnType<
 >[0];
 
 export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput;
+
+export type AuthUserWithAgencySigebarOptionsSubAccounts =
+  Prisma.PromiseReturnType<typeof getAuthUserDetails>;

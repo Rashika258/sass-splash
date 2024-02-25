@@ -1,5 +1,6 @@
 import { getAuthUserDetails } from '@/lib/queries';
 import * as React from 'react';
+import { MenuOptions } from './menu-options';
 
 export interface ISidebarProps {
     id: string,
@@ -7,26 +8,60 @@ export interface ISidebarProps {
 }
 
 export default async function Sidebar ({id, type}: ISidebarProps) {
-    const user = await getAuthUserDetails();
-    if(!user) return null;
+  const user = await getAuthUserDetails()
+  if (!user) return null
 
-    if(!user.Agency) return;
+  if (!user.Agency) return
 
-    const details = type === "agency" ? user?.Agency : user?.Agency?.SubAccount.find((subAccount) => subAccount.id === id )
+  const details =
+    type === 'agency'
+      ? user?.Agency
+      : user?.Agency.SubAccount.find((subaccount) => subaccount.id === id)
 
-    const isWhiteLabelAgency = user?.Agency?.whiteLabel;
-    if(!details) return;
+  const isWhiteLabeledAgency = user.Agency.whiteLabel
+  if (!details) return
 
-    let sideBarLogo = user?.Agency.agencyLogo || '/assets/plura-logo.svg';
+  let sideBarLogo = user.Agency.agencyLogo || '/assets/plura-logo.svg'
 
-    if(!isWhiteLabelAgency) {
-        if(type === "subaccount") {
-            sideBarLogo = user?.Agency?.SubAccount?.find((subAccount) => subAccount.id === id)?.subAccountLogo || user.Agency.agencyLogo
-        }
+  if (!isWhiteLabeledAgency) {
+    if (type === 'subaccount') {
+      sideBarLogo =
+        user?.Agency.SubAccount.find((subaccount) => subaccount.id === id)
+          ?.subAccountLogo || user.Agency.agencyLogo
     }
+  }
+
+  const sidebarOpt =
+    type === 'agency'
+      ? user.Agency.SidebarOption || []
+      : user.Agency.SubAccount.find((subaccount) => subaccount.id === id)
+          ?.SidebarOption || []
+
+  const subaccounts = user.Agency.SubAccount.filter((subaccount) =>
+    user.Permissions.find(
+      (permission) =>
+        permission.subAccountId === subaccount.id && permission.access
+    )
+  )
   return (
-    <div>
-      
-    </div>
+    <>
+    <MenuOptions
+      defaultOpen={true}
+      details={details}
+      id={id}
+      sidebarLogo={sideBarLogo}
+      sidebarOpt={sidebarOpt}
+      subAccounts={subaccounts}
+      user={user}
+    />
+    <MenuOptions
+      details={details}
+      id={id}
+      sidebarLogo={sideBarLogo}
+      sidebarOpt={sidebarOpt}
+      subAccounts={subaccounts}
+      user={user}
+    />
+  </>
   );
 }
