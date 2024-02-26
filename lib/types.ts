@@ -1,5 +1,6 @@
 import {
   Contact,
+  Lane,
   Notification,
   Prisma,
   Role,
@@ -15,6 +16,7 @@ import {
   getAuthUserDetails,
   getFunnels,
   getMedia,
+  getPipelineDetails,
   getTicketsWithTags,
   getUserPermissions,
 } from "./queries";
@@ -151,5 +153,13 @@ export type FunnelsForSubAccount = Prisma.PromiseReturnType<
 
 export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput;
 
+export type LaneDetail = Lane & {
+  Tickets: TicketAndTags[];
+};
+
 export type AuthUserWithAgencySigebarOptionsSubAccounts =
   Prisma.PromiseReturnType<typeof getAuthUserDetails>;
+
+export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
+  typeof getPipelineDetails
+>;

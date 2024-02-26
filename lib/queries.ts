@@ -941,3 +941,14 @@ export const getNotificationAndUser = async (agencyId: string) => {
   }
 }
 
+
+export const deleteTicket = async (ticketId: string) => {
+  const response = await db.ticket.delete({
+    where: {
+      id: ticketId,
+    },
+  })
+
+  return response
+}
+
