@@ -1,3 +1,5 @@
+'use client'
+
 import { toast } from '@/components/ui/use-toast';
 import { useModal } from '@/providers/modal-provider';
 import { Plan } from '@prisma/client';

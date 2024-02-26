@@ -1,3 +1,5 @@
+'use client'
+
 import { Agency, SubAccount } from "@prisma/client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";

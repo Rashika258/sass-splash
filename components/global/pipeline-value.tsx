@@ -1,3 +1,5 @@
+'use client'
+
 import { getPipelines } from "@/lib/queries";
 import { Prisma } from "@prisma/client";
 import * as React from "react";

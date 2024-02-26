@@ -1,3 +1,5 @@
+
+'use client'
 import { useModal } from "@/providers/modal-provider";
 import * as React from "react";
 import {

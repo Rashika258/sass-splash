@@ -1,3 +1,5 @@
+'use client'
+
 import { useToast } from "@/components/ui/use-toast";
 import { Plan } from "@prisma/client";
 import * as React from "react";
