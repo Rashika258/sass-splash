@@ -30,7 +30,7 @@ export interface IAllSubAccountsPageProps {
   params: { agencyId: string };
 }
 
-export async function AllSubAccountsPage({ params }: IAllSubAccountsPageProps) {
+export default async function AllSubAccountsPage({ params }: IAllSubAccountsPageProps) {
   const user = await getAuthUserDetails();
   if (!user) return;
   return (

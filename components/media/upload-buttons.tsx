@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Button } from '../ui/button';
 import CustomModal from '../global/custom-modal';
-import { UploadMediaForm } from '../forms/upload-media';
+import  UploadMediaForm  from '../forms/upload-media';
 import { useModal } from '@/providers/modal-provider';
 
 export interface IMediaUploadButtonProps {

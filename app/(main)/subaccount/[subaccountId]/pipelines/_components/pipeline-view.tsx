@@ -1,5 +1,5 @@
 'use client'
-import LaneForm from '@/components/forms/lane-form'
+
 import CustomModal from '@/components/global/custom-modal'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
 import PipelineLane from './pipeline-lane'
+import { LaneForm } from '@/components/forms/lane-form'
 
 type Props = {
   lanes: LaneDetail[]

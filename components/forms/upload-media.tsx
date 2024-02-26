@@ -37,7 +37,7 @@ const formSchema = z.object({
     name: z.string().min(1, { message: 'Name is required' }),
   })
 
-export function UploadMediaForm ({subaccountId}: IUploadMediaFormProps) {  const { toast } = useToast()
+export default function UploadMediaForm ({subaccountId}: IUploadMediaFormProps) {  const { toast } = useToast()
 const router = useRouter()
 const form = useForm<z.infer<typeof formSchema>>({
   resolver: zodResolver(formSchema),

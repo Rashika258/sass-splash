@@ -1,4 +1,5 @@
-import InfoBar from '@/components/global/infobar'
+// import InfoBar from '@/components/global/infobar'
+import { InfoBar } from '@/components/global/infobar'
 import Sidebar from '@/components/sidebar'
 import Unauthorized from '@/components/unauthorized'
 import {
